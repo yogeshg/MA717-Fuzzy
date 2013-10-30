@@ -1,6 +1,26 @@
-function fuzzyEquation(A,B)
+function S = fuzzyEquation(A,B,display)
+% fuzzyEquation - Solves Fuzzy Linear Programming Problem
+% function S = fuzzyEquation(A,B,display)
+% A - Coefficient Matrix
+% B - RHS Vector
+% display - Display parameters involved?
+% S - Solution set
+% 
+% AUTHOR    : Sameer Saksena
+%             20xxXXxxxxx
+% AUTHOR    : Yogesh Garg
+%             2009MT50635
+% DATE      : 31-Oct-2013
+% COURSE    : MAL717 Fuzzy Sets and Applications
+%             Prof. Suresh Chandra
+%             Indian Institute of Technology, Delhi
+%%
 
 [m,n] = size(A);
+
+if (nargin < 3)
+    display = false;
+end
 
 %Rearranging the rows to get the system in normal form
 SortEq = sortrows([A B],-(n+1));
@@ -9,68 +29,14 @@ B = SortEq(:,n+1);
 
 % Compute augmented matrix
 Aug = augmentedMatrix( A, B );
-disp('-----------------Augmented Matrix-------------------------')
-disp(Aug)
-
-% Row Independence
-IND = zeros(m,1);
-% Help matrix
-H = zeros(m,n);
-% Xgr
-Xgr = ones(n,1);
-
-for j=1:n
-    %Step 8
-    % in every column, find kth cell which is 1
-    k = 0;
-    for i=1:m
-        if (Aug(i,j) == 1) 
-            k = i;
-        end
-    end    
-    % if such k is found
-    if (k ~=0)
-        Xgr(j) = B(k);
-        IND(k) = IND(k) + 1;
-        H(k,j) = B(k);
-        
-        for i=1:(k-1)
-            if ((Aug(i,j) >= B(i))&&(B(i) == B(k)))
-                IND(i) = IND(i) + 1;
-                H(i,j) = B(i);
-            end
-        end
-        
-        for i=(k+1):m
-            if Aug(i,j) == B(i)
-                IND(i) = IND(i) + 1;
-                H(i,j) = B(i);
-            end
-        end
-    else
-        %Step 9
-        % in every column, find first rth cell which is b(i)    
-        r = 0;
-        for i=1:m
-            if (Aug(i,j) == B(i))
-                r = i;
-                break;
-            end
-        end
-        
-        if (r ~=0)
-            for i=r:m
-                if (Aug(i,j) == B(i))
-                    IND(i) = IND(i) + 1;
-                    H(i,j) = B(i);
-                end
-            end
-            
-        end
-    end
+if( display )
+    disp('-----------------Augmented Matrix-------------------------')
+    disp(Aug)
 end
 
-%step 10
+[H, IND, Xgr] = helpMatrix( Aug );
+
+% Check if consistent
 for i=1:m
     if (IND(i) == 0)
         disp('System is inconsistent');
@@ -78,29 +44,38 @@ for i=1:m
     end
 end
 
-%Step 12
-disp('---------------- Help Matrix -----------------------------');
-disp(H);
-disp('---------------- Independence ----------------------------');
-disp(IND);
+if( display )
+    disp('---------------- Help Matrix -----------------------------');
+    disp(H);
+end
 
+domH = dominanceMatrix(H);
 
-domH = dominanceMatrix(H,m,n);
-disp('----------------Dominance Matrix--------------------------');
-disp(domH);
+if( display )
+    disp('----------------Dominance Matrix--------------------------');
+    disp(domH);
+end
 
+Xlow = lowerSolution(domH);
 
-%Step 13
-disp('----------------Complete Solution Set---------------------');
-disp('Greatest Solution(Xgr)')
-disp(Xgr)
-disp('Lower Point Solutions(Xlow)')
-Xlow = lowerSolution(domH,m,n);
-disp(Xlow)
+if( display )
+    disp('----------------Complete Solution Set---------------------');
+    disp('Greatest Solution(Xgr)')
+    disp(Xgr)
+    disp('Lower Point Solutions(Xlow)')
+    disp(Xlow)
+end
 
 S = solution(Xlow,Xgr);
 
+if( display )
+disp('Maximal Interval Solution')
+    for i = 1:size(S,2)
+        sol = S{i};
+        disp('------------------------------------')
+        disp('Xmax:')
+        disp(sol')
+    end
+end
+
 return;
-
-
-
