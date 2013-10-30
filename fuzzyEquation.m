@@ -7,27 +7,29 @@ SortEq = sortrows([A B],-(n+1));
 A = SortEq(:,1:n);
 B = SortEq(:,n+1);
 
-%compute augmented matrix
+% Compute augmented matrix
 Aug = augmentedMatrix( A, B );
 disp('-----------------Augmented Matrix-------------------------')
 disp(Aug)
 
+% Row Independence
 IND = zeros(m,1);
+% Help matrix
 H = zeros(m,n);
-domH = zeros(m,n);
-
+% Xgr
 Xgr = ones(n,1);
 
 for j=1:n
     %Step 8
+    % in every column, find kth cell which is 1
     k = 0;
     for i=1:m
-        if (Aug(i,j) == 1)
+        if (Aug(i,j) == 1) 
             k = i;
         end
     end    
-    
-    if (k ~=0) % 1 found 
+    % if such k is found
+    if (k ~=0)
         Xgr(j) = B(k);
         IND(k) = IND(k) + 1;
         H(k,j) = B(k);
@@ -47,6 +49,7 @@ for j=1:n
         end
     else
         %Step 9
+        % in every column, find first rth cell which is b(i)    
         r = 0;
         for i=1:m
             if (Aug(i,j) == B(i))
@@ -78,8 +81,12 @@ end
 %Step 12
 disp('---------------- Help Matrix -----------------------------');
 disp(H);
-disp('----------------Dominance Matrix--------------------------');
+disp('---------------- Independence ----------------------------');
+disp(IND);
+
+
 domH = dominanceMatrix(H,m,n);
+disp('----------------Dominance Matrix--------------------------');
 disp(domH);
 
 
