@@ -3,26 +3,12 @@ function fuzzyEquation(A,B)
 [m,n] = size(A);
 
 %Rearranging the rows to get the system in normal form
-SortEq = [A B];
-SortEq = SORTROWS(SortEq,[-size(SortEq,2)]);
+SortEq = sortrows([A B],-(n+1));
 A = SortEq(:,1:n);
 B = SortEq(:,n+1);
 
 %compute augmented matrix
-Aug = zeros(m,n);
-for i = 1:m
-    for j=1:n
-        if (A(i,j) < B(i))
-            Aug(i,j) = 0;
-        elseif (A(i,j) == B(i))
-            Aug(i,j) = B(i);
-        else 
-            Aug(i,j) = 1;
-        end
-    end
-end
-Aug = [Aug B];
-
+Aug = augmentedMatrix( A, B );
 disp('-----------------Augmented Matrix-------------------------')
 disp(Aug)
 
