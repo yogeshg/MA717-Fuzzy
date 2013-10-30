@@ -1,7 +1,23 @@
 function [H, IND, Xgr] = helpMatrix( Aug )
+% helpMatrix - Given FLP's augmented matrix in normal form, make Help
+%               matrix, independence matrix and greater limit of Solution
+% function [H, IND, Xgr] = helpMatrix( Aug )
+% Aug - Augmented Matrix
+% H - Help Matrix
+% IND - Independence Matrix
+% Xgr - Solution Space Greater Limit
+% 
+% AUTHOR    : Sameer Saksena
+%             20xxXXxxxxx
+% AUTHOR    : Yogesh Garg
+%             2009MT50635
+% DATE      : 31-Oct-2013
+% COURSE    : MAL717 Fuzzy Sets and Applications
+%             Prof. Suresh Chandra
+%             Indian Institute of Technology, Delhi
+%%
 
 [m,n] = size(Aug);
-% n = n-1;
 
 % Row Independence
 IND = zeros(m,1);

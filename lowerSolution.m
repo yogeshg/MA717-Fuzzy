@@ -1,5 +1,21 @@
+function [Xlow] = lowerSolution(domH)
+% lowerSolution - Given dominance matrix of FLP, create lower limit of
+%                   solution
+% function [Xlow] = lowerSolution(domH)
+% domH - Dominance Matrix
+% Xlow - Lower limit of Solution Space
+% 
+% AUTHOR    : Sameer Saksena
+%             20xxXXxxxxx
+% AUTHOR    : Yogesh Garg
+%             2009MT50635
+% DATE      : 31-Oct-2013
+% COURSE    : MAL717 Fuzzy Sets and Applications
+%             Prof. Suresh Chandra
+%             Indian Institute of Technology, Delhi
+%%
 
-function [Xlow] = lowerSolution(domH,m,n)
+[m, n] = size(domH);
 
 %Step 13
 sol = cell(1);
@@ -76,6 +92,5 @@ for j=1:size(Xtemp,2)
     
 end
 Xlow = Xlow';
-disp('')
 
 return;
